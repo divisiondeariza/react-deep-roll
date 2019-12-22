@@ -3,12 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@magenta/music": "^1.12.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "lodash": "^4.17.15",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.3.0"
+    "react-scripts": "3.3.0",
+    "reactdom": "^2.0.0",
+    "startaudiocontext": "^1.2.1",
+    "tonal": "^2.2.2",
+    "webmidi": "^2.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
