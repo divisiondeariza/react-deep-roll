@@ -9,6 +9,7 @@ import * as mm from '@magenta/music';
 import * as Tonal from 'tonal';
 import * as WebMidi from 'webmidi';
 import * as StartAudioContext from 'startaudiocontext';
+import beethoven from './beethoven.json'
 
 class DeepRoll extends React.Component {
   constructor(props) {
@@ -70,67 +71,8 @@ class DeepRoll extends React.Component {
           : _.sample(options);
       }
 
-    // Beethoven's chord progression probabilities
 
-    // 0 = I, 1 = ii, etc.
-    var chordProgressions = new Tone.CtrlMarkov({
-      0: [
-        { value: 1, probability: 0.1 },
-        { value: 2, probability: 0.01 },
-        { value: 3, probability: 0.13 },
-        { value: 4, probability: 0.52 },
-        { value: 5, probability: 0.02 },
-        { value: 6, probability: 0.22 }
-      ],
-      1: [
-        { value: 0, probability: 0.06 },
-        { value: 2, probability: 0.02 },
-        { value: 3, probability: 0.0 },
-        { value: 4, probability: 0.87 },
-        { value: 5, probability: 0.0 },
-        { value: 6, probability: 0.05 }
-      ],
-      2: [
-        { value: 0, probability: 0.0 },
-        { value: 1, probability: 0.0 },
-        { value: 3, probability: 0.0 },
-        { value: 4, probability: 0.67 },
-        { value: 5, probability: 0.33 },
-        { value: 6, probability: 0.0 }
-      ],
-      3: [
-        { value: 0, probability: 0.33 },
-        { value: 1, probability: 0.03 },
-        { value: 2, probability: 0.07 },
-        { value: 4, probability: 0.4 },
-        { value: 5, probability: 0.03 },
-        { value: 6, probability: 0.13 }
-      ],
-      4: [
-        { value: 0, probability: 0.56 },
-        { value: 1, probability: 0.22 },
-        { value: 2, probability: 0.01 },
-        { value: 3, probability: 0.04 },
-        { value: 5, probability: 0.07 },
-        { value: 6, probability: 0.11 }
-      ],
-      5: [
-        { value: 0, probability: 0.06 },
-        { value: 1, probability: 0.44 },
-        { value: 2, probability: 0.0 },
-        { value: 3, probability: 0.06 },
-        { value: 4, probability: 0.11 },
-        { value: 6, probability: 0.33 }
-      ],
-      6: [
-        { value: 0, probability: 0.8 },
-        { value: 1, probability: 0.0 },
-        { value: 2, probability: 0.0 },
-        { value: 3, probability: 0.03 },
-        { value: 4, probability: 0.0 },
-        { value: 5, probability: 0.0 }
-      ]
-    });
+    var chordProgressions = new Tone.CtrlMarkov(beethoven);
     chordProgressions.value = 0;
 
     let temperature = 1.3;
