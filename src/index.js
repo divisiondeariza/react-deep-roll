@@ -16,6 +16,8 @@ class DeepRoll extends React.Component {
   constructor(props) {
     super(props);
     this.vis = React.createRef();
+    let rollNotes = _.range(48 , 83); //_.range(MIN_NOTE, MAX_NOTE);
+    this.state = {domNotes: rollNotes}
   }
 
   render(){
@@ -359,7 +361,6 @@ class DeepRoll extends React.Component {
     // });
     //
 
-
     // let noteEls = _.range(MIN_NOTE, MAX_NOTE).map(note => {
     //   let el = ReactDOM.findDOMNode(this).createElement('note');
     //   el.classList.add('note');
@@ -453,11 +454,15 @@ class DeepRoll extends React.Component {
       Tone.Transport.start();
     });
     StartAudioContext(Tone.context, '#ui');
-
+    console.log(this.state);
     return  <div>
               <div id="vis-wrap">
                   <div id="vis-bg"></div>
-                  <div id="vis" ref={this.vis}></div>
+                  <div id="vis" ref={this.vis}>
+                    {this.state.domNotes.map((note) => <note className="note" value={note}>
+                            NOTA
+                    </note>)}
+                  </div>
               </div>
               <div id="ui">
                 <div class="button-row">
