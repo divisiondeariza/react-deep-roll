@@ -11,6 +11,10 @@ import * as WebMidi from 'webmidi';
 import * as StartAudioContext from 'startaudiocontext';
 
 class DeepRoll extends React.Component {
+  constructor(props) {
+    super(props);
+    this.vis = React.createRef();
+  }
 
   render(){
     const MIN_NOTE = 48;
@@ -496,73 +500,75 @@ class DeepRoll extends React.Component {
     //   }
     // });
     //
+
+
     // let noteEls = _.range(MIN_NOTE, MAX_NOTE).map(note => {
     //   let el = ReactDOM.findDOMNode(this).createElement('note');
     //   el.classList.add('note');
-    //   vis.appendChild(el);
+    //   this.vis.appendChild(el);
     //   return el;
     // });
-    //
+
 
     function visualizePlay(note, amount) {
       let noteIdx = note - MIN_NOTE;
-      if (noteIdx >= 0 && noteIdx < noteEls.length) {
-        let noteEl = noteEls[noteIdx];
-        let playEl = ReactDOM.findDOMNode(this).createElement('div');
-        let routeLength = vis.offsetHeight + 20;
-        playEl.classList.add('play');
-        playEl.style.opacity = amount;
-        noteEl.appendChild(playEl);
-        let pathAnimation = playEl.animate(
-          [
-            { transform: 'translateY(0)' },
-            { transform: `translateY(-${routeLength}px)` }
-          ],
-          {
-            duration: 60000,
-            easing: 'linear'
-          }
-        );
-        pathAnimation.onfinish = () => playEl.remove();
-        playEl.animate([{ opacity: amount }, { opacity: 0 }], {
-          duration: 60000,
-          easing: 'ease-in',
-          fill: 'forwards'
-        });
-      }
+      // if (noteIdx >= 0 && noteIdx < noteEls.length) {
+      //   let noteEl = noteEls[noteIdx];
+      //   let playEl = ReactDOM.findDOMNode(this).createElement('div');
+      //   let routeLength = this.vis.offsetHeight + 20;
+      //   playEl.classList.add('play');
+      //   playEl.style.opacity = amount;
+      //   noteEl.appendChild(playEl);
+      //   let pathAnimation = playEl.animate(
+      //     [
+      //       { transform: 'translateY(0)' },
+      //       { transform: `translateY(-${routeLength}px)` }
+      //     ],
+      //     {
+      //       duration: 60000,
+      //       easing: 'linear'
+      //     }
+      //   );
+      //   pathAnimation.onfinish = () => playEl.remove();
+      //   playEl.animate([{ opacity: amount }, { opacity: 0 }], {
+      //     duration: 60000,
+      //     easing: 'ease-in',
+      //     fill: 'forwards'
+      //   });
+      // }
     }
 
     function setCurrentKeyInUI(key) {
       let keyNote = Tone.Frequency(key, 'midi').toNote();
-      keyButtons.forEach(
-        b =>
-          b.value === keyNote
-            ? b.classList.add('current')
-            : b.classList.remove('current')
-      );
+      // keyButtons.forEach(
+      //   b =>
+      //     b.value === keyNote
+      //       ? b.classList.add('current')
+      //       : b.classList.remove('current')
+      // );
       ReactDOM.findDOMNode(this).body.className = `key-${KEYS.indexOf(keyNote)}`;
     }
 
     function setCurrentModeInUI(mode) {
       let modeIndex = '' + MODES.indexOf(mode);
-      modeButtons.forEach(
-        b =>
-          b.value === modeIndex
-            ? b.classList.add('current')
-            : b.classList.remove('current')
-      );
+      // modeButtons.forEach(
+      //   b =>
+      //     b.value === modeIndex
+      //       ? b.classList.add('current')
+      //       : b.classList.remove('current')
+      // );
     }
 
-    // keyButtons.forEach(keyButton =>
-    //   keyButton.addEventListener('click', evt => {
-    //     keyButton.classList.add('pending');
-    //     pendingActions.push({
-    //       type: 'keyChange',
-    //       key: Tone.Frequency(evt.target.value).toMidi(),
-    //       onDone: () => keyButton.classList.remove('pending')
-    //     });
-    //   })
-    // );
+    const handleKeySelect = (key) => {
+          pendingActions.push({
+            //     keyButton.classList.add('pending');
+            type: 'keyChange',
+            key: Tone.Frequency(key).toMidi(),
+            //onDone: () => keyButton.classList.remove('pending')
+          });
+    }
+
+
 
     // modeButtons.forEach(modeButton =>
     //   modeButton.addEventListener('click', evt => {
@@ -575,29 +581,29 @@ class DeepRoll extends React.Component {
     //   })
     // );
     //
-    // let keyNote = Tone.Frequency(key, 'midi').toNote();
-    // let modeIndex = '' + MODES.indexOf(mode);
+    let keyNote = Tone.Frequency(key, 'midi').toNote();
+    let modeIndex = '' + MODES.indexOf(mode);
     // keyButtons.find(k => k.value === keyNote).classList.add('current');
     // modeButtons.find(m => m.value === '' + modeIndex).classList.add('current');
     // ReactDOM.findDOMNode(this).body.className = `key-${KEYS.indexOf(keyNote)}`;
     //
-    // let bufferLoadPromise = new Promise(res => Tone.Buffer.on('load', res));
-    // Promise.all([rnn.initialize(), bufferLoadPromise]).then(() => {
-    //   ReactDOM.findDOMNode(this).querySelector('#loading').remove();
-    //   generateNext(Tone.now());
-    //   Tone.Transport.scheduleRepeat(playNext, '16n', '8n');
-    //   Tone.Transport.start();
-    // });
-    // StartAudioContext(Tone.context, '#ui');
+    let bufferLoadPromise = new Promise(res => Tone.Buffer.on('load', res));
+    Promise.all([rnn.initialize(), bufferLoadPromise]).then(() => {
+      //ReactDOM.findDOMNode(this).querySelector('#loading').remove();
+      generateNext(Tone.now());
+      Tone.Transport.scheduleRepeat(playNext, '16n', '8n');
+      Tone.Transport.start();
+    });
+    StartAudioContext(Tone.context, '#ui');
 
     return  <div>
               <div id="vis-wrap">
                   <div id="vis-bg"></div>
-                  <div id="vis"></div>
+                  <div id="vis" ref={this.vis}></div>
               </div>
               <div id="ui">
                 <div class="button-row">
-                  {KEYS.map(key => <button class="key" value={key}>{key.slice(0, -1)}</button>)}
+                  {KEYS.map(key => <button class="key" value={key} onClick={ () => handleKeySelect(key) }>{key.slice(0, -1)}</button>)}
                 </div>
                 <div class="button-row">
                   <button class="mode" value="0">Ionian</button>
